@@ -18,6 +18,7 @@ public:
 private:
 
 	void insertNewNode(int key, SkipListNode* pos);
+	void deleteSkipNode(SkipListNode*& node);
 	SkipListNode* searchSuitablePosition(int key); // return the least element that greater than key
 	int numLevels;
 	int numDistinctElems;

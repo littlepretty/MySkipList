@@ -12,8 +12,48 @@ SkipList::SkipList(double p): numLevels(1), numDistinctElems(0), numNodes(0), co
 
 SkipList::~SkipList()
 {
-	delete coin;
+	std::cout<<"SkipList Statistics: "<<numNodes<<" Nodes Left and "<<numLevels<<" Levels Left"<<std::endl;
 	// delete SkipListNode in the chain
+	for (std::vector<SkipListNode* >::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+	{
+		SkipListNode* header = *iter;
+		if (header->next != NULL)
+		{
+			//	could not delete header NOW while iterater through vector
+			SkipListNode* current = header->next;
+			while(current != NULL) {
+				SkipListNode* toDelete = current;
+				current = current->next;
+				deleteSkipNode(toDelete);
+				--numNodes;
+			}
+		}
+		--numLevels;
+	}
+
+	delete coin;
+	std::cout<<"SkipList Disposed: "<<numNodes<<" Nodes Left and "<<numLevels<<" Levels Left"<<std::endl;
+}
+
+void SkipList::deleteSkipNode(SkipListNode*& node)
+{
+	if (node->up != NULL)
+	{
+		node->up->down = NULL;
+	}
+	if (node->down != NULL)
+	{
+		node->down->up = NULL;
+	}
+	if (node->prev != NULL)
+	{
+		node->prev->next = NULL;
+	}
+	if (node->next != NULL)
+	{
+		node->next->prev = NULL;
+	}
+	delete node;
 }
 
 int SkipList::insert(int key)
