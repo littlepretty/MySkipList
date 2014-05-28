@@ -24,7 +24,7 @@ SkipList::~SkipList()
 			while(current != NULL) {
 				SkipListNode* toDelete = current;
 				current = current->next;
-				deleteSkipNode(toDelete);
+				deleteSkipNodeOneByOne(toDelete);
 				--numNodes;
 			}
 		}
@@ -35,7 +35,7 @@ SkipList::~SkipList()
 	std::cout<<"SkipList Disposed: "<<numNodes<<" Nodes Left and "<<numLevels<<" Levels Left"<<std::endl;
 }
 
-void SkipList::deleteSkipNode(SkipListNode*& node)
+void SkipList::deleteSkipNodeOneByOne(SkipListNode*& node)
 {
 	if (node->up != NULL)
 	{
@@ -216,6 +216,54 @@ SkipListNode* SkipList::searchSuitablePosition(int key)
 	std::cout<<"Break At "<<current->key<<" Level "<<level<<std::endl;
 
 	return current->key > key ? current->prev : current;
+}
+
+void SkipList::remove(int key)
+{
+	std::cout<<"---------------Remove "<<key<<"-----------------------------"<<std::endl;
+	SkipListNode *pos = search(key);
+	if (pos != NULL)
+	{
+
+		SkipListNode *toDelete;
+
+		SkipListNode *iter = pos->down;
+		while(iter != NULL) {
+			toDelete = iter;
+			iter = iter->down;
+			deleteSkipNodeInList(toDelete);
+		}
+
+		iter = pos->up;
+		while(iter != NULL) {
+			toDelete = iter;
+			iter = iter->up;
+			deleteSkipNodeInList(toDelete);
+		}
+
+		deleteSkipNodeInList(pos);
+	}
+	std::cout<<"------------------------------------------------------------"<<std::endl;
+
+}
+
+void SkipList::deleteSkipNodeInList(SkipListNode*& node)
+{
+	if (node != NULL)
+	{
+		if (node->next != NULL)
+		{
+			node->next->prev = node->prev;
+		}
+		if (node->prev != NULL)
+		{
+			node->prev->next = node->next;
+		}
+
+		node->prev = node->next = node->up = node->down = NULL;
+		delete node;
+	}
+
 }
 
 std::ostream& operator<<(std::ostream& os, const SkipList& sl)

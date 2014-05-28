@@ -79,6 +79,15 @@ void testBasicSkipList()
 	sl.search(8);
 	sl.search(1);
 	sl.search(10);
+
+	std::cout<<sl<<std::endl;
+	sl.remove(5);
+	std::cout<<sl<<std::endl;
+	sl.remove(8);
+	std::cout<<sl<<std::endl;
+	sl.remove(1);
+	std::cout<<sl<<std::endl;
+
 }
 
 int main(int argc, char const *argv[])
